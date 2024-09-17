@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ethereum Fraud Detection</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 800px; /* Increased the width for better visualization of plots */
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #007BFF;
+        }
+
+        h3 {
+            margin-top: 15px;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #333;
+        }
+
+        input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #fff;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #prediction_text {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .upload-form {
+            margin-top: 20px;
+        }
+
+        .upload-form label {
+            display: block;
+            margin-top: 10px;
+            color: #333;
+        }
+
+        .upload-form input[type="file"] {
+            width: calc(100% - 22px);
+        }
+
+        .upload-form input[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #fff;
+            background-color: #28a745;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .upload-form input[type="submit"]:hover {
+            background-color: #218838;
+        }
+
+        /* Add this style for the plot image */
+        .plot-image {
+            width: 100%;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body style="background-color: grey;">
+    <div class="container">
+        <h1>Ethereum Fraud Detection</h1>
+
+        <!-- Main Input For Receiving Query to our ML -->
+        <form action="{{ url_for('predict') }}" method="post">
+            <div>
+                <h3>Time-based Features</h3>
+                <label for="avgMinSentTnx">Avg min between sent tnx:</label>
+                <input type="text" id="avgMinSentTnx" name="avgMinSentTnx" required>
+                <label for="avgMinReceivedTnx">Avg min between received tnx:</label>
+                <input type="text" id="avgMinReceivedTnx" name="avgMinReceivedTnx" required>
+                <label for="timeDiffFirstLastMins">Time Diff between first and last (Mins):</label>
+                <input type="text" id="timeDiffFirstLastMins" name="timeDiffFirstLastMins" required>
+                <h3>Transaction Features</h3>
+                <label for="numSentTnx">Sent tnx:</label>
+                <input type="text" id="numSentTnx" name="numSentTnx" required>
+                <label for="numReceivedTnx">Received Tnx:</label>
+                <input type="text" id="numReceivedTnx" name="numReceivedTnx" required>
+                <h3>Value Features</h3>
+                <label for="maxValueReceived">max value received:</label>
+                <input type="text" id="maxValueReceived" name="maxValueReceived" required>
+                <label for="avgValReceived">avg val received:</label>
+                <input type="text" id="avgValReceived" name="avgValReceived" required>
+                <label for="minValueSent">min val sent:</label>
+                <input type="text" id="minValueSent" name="minValueSent" required>
+                <label for="maxValueSent">max val sent:</label>
+                <input type="text" id="maxValueSent" name="maxValueSent" required>
+                <label for="avgValSent">avg val sent:</label>
+                <input type="text" id="avgValSent" name="avgValSent" required>
+                <label for="totalEtherSent">Total Ether Sent:</label>
+                <input type="text" id="totalEtherSent" name="totalEtherSent" required>
+
+                <label for="totalEtherReceived">Total Ether Received:</label>
+                <input type="text" id="totalEtherReceived" name="totalEtherReceived" required>
+
+                <h3>ERC20 Features</h3>
+
+                <label for="totalERC20Tnxs">Total ERC20 Transactions:</label>
+                <input type="text" id="totalERC20Tnxs" name="totalERC20Tnxs" required>
+
+                <label for="erc20TotalEtherReceived">ERC20 Total Ether Received:</label>
+                <input type="text" id="erc20TotalEtherReceived" name="erc20TotalEtherReceived" required>
+
+                <label for="erc20UniqRecContractAddr">ERC20 Unique Received Contract Address:</label>
+                <input type="text" id="erc20UniqRecContractAddr" name="erc20UniqRecContractAddr" required>
+
+                <label for="erc20UniqRecTokenName">ERC20 Unique Received Token Name:</label>
+                <input type="text" id="erc20UniqRecTokenName" name="erc20UniqRecTokenName" required>
+
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+        
+        <form class="upload-form" action="{{ url_for('csv_predict') }}" method="post" enctype="multipart/form-data">
+            <label for="csvFile">Upload CSV file:</label>
+            <input type="file" name="csvFile" accept=".csv">
+            <input type="submit" value="Run Model">
+        </form>
+        <br>
+        <br>
+        
+</body>
+
+</html>

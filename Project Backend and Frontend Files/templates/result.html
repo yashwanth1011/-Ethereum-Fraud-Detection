@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ethereum Fraud Detection</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 800px; /* Increased the width for better visualization of plots */
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #007BFF;
+        }
+
+        h3 {
+            margin-top: 15px;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #333;
+        }
+
+        input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #fff;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #prediction_text {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .upload-form {
+            margin-top: 20px;
+        }
+
+        .upload-form label {
+            display: block;
+            margin-top: 10px;
+            color: #333;
+        }
+
+        .upload-form input[type="file"] {
+            width: calc(100% - 22px);
+        }
+
+        .upload-form input[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #fff;
+            background-color: #28a745;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .upload-form input[type="submit"]:hover {
+            background-color: #218838;
+        }
+
+        /* Add this style for the plot image */
+        .plot-image {
+            width: 100%;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body style="background-color: grey;">
+    <div class="container">
+        <h1>Ethereum Fraud Detection</h1>
+        <br>
+        <br>
+        <div id="prediction_text_details">
+            <p>The predicted value is: {{ prediction_text_details }}</p>
+            <p>Count for Not Fraud: {{ count_0 }}</p>
+            <p>Count for Fraud: {{ count_1 }}</p>
+            {% if count_1 > 100 %}
+        <p style="color: red; font-weight: bold;">Fraud Alert!</p>
+        <p>Suggestions:</p>
+        <ul>
+            <li>Review the transaction details for suspicious activities.</li>
+            <li>Contact the user for additional verification.</li>
+        </ul>
+    {% endif %}
+        </div>
+        <img class="plot-image" src="data:image/png;base64,{{ plot }}" alt="Prediction Distribution">
+        <div id="prediction_text">{{ prediction_text }}</div>
+    </div>
+</body>
+
+</html>
