@@ -34,7 +34,7 @@ This project aims to detect fraudulent transactions in Ethereum networks using m
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/yashwanth1011/-Ethereum-Fraud-Detection.git
    cd Ethereum-Fraud-Detection
    ```
 
