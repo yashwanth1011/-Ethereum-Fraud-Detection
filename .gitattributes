@@ -1,15 +1,4 @@
-# Mark Python files
 *.py linguist-language=Python
-
-# Mark HTML files
 *.html linguist-language=HTML
-
-# Mark CSS files
 *.css linguist-language=CSS
-
-# Mark JavaScript files
 *.js linguist-language=JavaScript
-
-# Ignore dataset files from language stats
-*.csv linguist-vendored
-*.pkl linguist-vendored
